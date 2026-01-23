@@ -1,6 +1,9 @@
 'use client';
 
 import { useState } from "react";
+
+// Force dynamic rendering for pages using useSearchParams
+export const dynamic = 'force-dynamic';
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
