@@ -1,20 +1,10 @@
 'use client';
 
-import { useState } from "react";
-
-// Force dynamic rendering for pages using useSearchParams
-export const dynamic = 'force-dynamic';
+import { useState, Suspense } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
 import { 
   X, 
   Plus, 
@@ -24,7 +14,10 @@ import {
 } from "lucide-react";
 import { mockDevices } from "@/data/mockDevices";
 
-const Compare = () => {
+// Force dynamic rendering for pages using useSearchParams
+export const dynamic = 'force-dynamic';
+
+function CompareContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -519,7 +512,6 @@ const Compare = () => {
               {/* Quick Compare All Button */}
               <button
                 onClick={() => {
-                  // Scroll to comparison on desktop or show modal
                   const table = document.querySelector('.lg\\:block');
                   if (table) {
                     table.scrollIntoView({ behavior: 'smooth' });
@@ -539,6 +531,31 @@ const Compare = () => {
       </div>
     </div>
   );
-};
+}
 
-export default Compare;
+function CompareLoading() {
+  return (
+    <div className="min-h-screen bg-[#F8F9FB] py-8">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-48 mb-2"></div>
+          <div className="h-4 bg-gray-200 rounded w-72 mb-8"></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className="h-64 bg-gray-200 rounded-2xl"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function Compare() {
+  return (
+    <Suspense fallback={<CompareLoading />}>
+      <CompareContent />
+    </Suspense>
+  );
+}
+
